@@ -34,7 +34,6 @@ musVright = ['MVR07', 'MVR08', 'MVR09', 'MVR10', 'MVR11', 'MVR12', 'MVR13', 'MVR
 # neurite and the postsynaptic neurites
 def ADAL():
         postsynaptic['ADAR'] += 1
-        postsynaptic['ADAR'] += 1
         postsynaptic['ADFL'] += 1
         postsynaptic['AIBL'] += 1
         postsynaptic['AIBR'] += 2
@@ -114,7 +113,6 @@ def ADER():
         postsynaptic['AVER'] += 1
         postsynaptic['AVJR'] += 1
         postsynaptic['AVKL'] += 1
-        postsynaptic['AVKL'] += 1
         postsynaptic['AVKR'] += 1
         postsynaptic['CEPDR'] += 1
         postsynaptic['FLPL'] += 1
@@ -170,7 +168,6 @@ def ADLL():
         postsynaptic['AVJL'] += 1
         postsynaptic['AVJR'] += 3
         postsynaptic['AWBL'] += 2
-        postsynaptic['OLQVL'] += 1
         postsynaptic['OLQVL'] += 1
         postsynaptic['RIPL'] += 1
         postsynaptic['RMGL'] += 1
@@ -232,7 +229,6 @@ def AIAR():
         postsynaptic['ASER'] += 1
         postsynaptic['ASGR'] += 1
         postsynaptic['ASIR'] += 2
-        postsynaptic['AWAR'] += 1
         postsynaptic['AWAR'] += 1
         postsynaptic['AWCL'] += 1
         postsynaptic['AWCR'] += 3
@@ -320,8 +316,6 @@ def AINL():
         postsynaptic['AINR'] += 2
         postsynaptic['ASEL'] += 3
         postsynaptic['ASGR'] += 1
-        postsynaptic['ASGR'] += 1
-        postsynaptic['AUAR'] += 1
         postsynaptic['AUAR'] += 1
         postsynaptic['BAGL'] += 3
         postsynaptic['RIBL'] += 1
@@ -555,7 +549,6 @@ def AS8():
 def AS9():
         postsynaptic['AVAL'] += 4
         postsynaptic['AVAR'] += 1
-        postsynaptic['AVAR'] += 1
         postsynaptic['DVB'] += 7
         postsynaptic['MDL17'] += 2
         postsynaptic['MDL20'] += 3
@@ -612,7 +605,6 @@ def ASGL():
         postsynaptic['AIAL'] += 9
         postsynaptic['AIBL'] += 3
         postsynaptic['AINR'] += 1
-        postsynaptic['AINR'] += 1
         postsynaptic['AIZL'] += 1
         postsynaptic['ASKL'] += 1
 
@@ -624,7 +616,6 @@ def ASGR():
         postsynaptic['AIZR'] += 1
 
 def ASHL():
-        postsynaptic['ADAL'] += 1
         postsynaptic['ADAL'] += 1
         postsynaptic['ADFL'] += 3
         postsynaptic['AIAL'] += 7
@@ -1214,7 +1205,6 @@ def AVKR():
         postsynaptic['RMFL'] += 1
         postsynaptic['SAADL'] += 1
         postsynaptic['SMBDL'] += 1
-        postsynaptic['SMBDL'] += 1
         postsynaptic['SMBDR'] += 2
         postsynaptic['SMBVR'] += 1
         postsynaptic['SMDDL'] += 1
@@ -1335,7 +1325,6 @@ def BAGL():
         postsynaptic['AVAR'] += 1
         postsynaptic['AVEL'] += 1
         postsynaptic['AVER'] += 4
-        postsynaptic['BAGR'] += 1
         postsynaptic['BAGR'] += 1
         postsynaptic['RIAR'] += 5
         postsynaptic['RIBL'] += 1
@@ -1474,7 +1463,6 @@ def DA1():
 
 def DA2():
         postsynaptic['AS2'] += 1
-        postsynaptic['AS2'] += 1
         postsynaptic['AS3'] += 1
         postsynaptic['AVAL'] += 2
         postsynaptic['AVAR'] += 2
@@ -1513,7 +1501,6 @@ def DA4():
         postsynaptic['AVAR'] += 2
         postsynaptic['DA1'] += 1
         postsynaptic['DA3'] += 1
-        postsynaptic['DB3'] += 1
         postsynaptic['DB3'] += 1
         postsynaptic['DD2'] += 1
         postsynaptic['MDL11'] += 4
@@ -1790,7 +1777,6 @@ def DVA():
         postsynaptic['AVAL'] += 3
         postsynaptic['AVAR'] += 1
         postsynaptic['AVBL'] += 1
-        postsynaptic['AVBL'] += 1
         postsynaptic['AVBR'] += 1
         postsynaptic['AVEL'] += 9
         postsynaptic['AVER'] += 5
@@ -1930,9 +1916,7 @@ def HSNR():
         postsynaptic['DA5'] += 1
         postsynaptic['DA6'] += 1
         postsynaptic['HSNL'] += 1
-        postsynaptic['HSNL'] += 1
         postsynaptic['MVULVA'] += 6
-        postsynaptic['PVNR'] += 1
         postsynaptic['PVNR'] += 1
         postsynaptic['PVQR'] += 1
         postsynaptic['RIFR'] += 4
@@ -2173,7 +2157,6 @@ def LUAR():
         postsynaptic['PLMR'] += 1
         postsynaptic['PQR'] += 1
         postsynaptic['PVCR'] += 3
-        postsynaptic['PVR'] += 1
         postsynaptic['PVR'] += 1
         postsynaptic['PVWL'] += 1
 
@@ -2819,7 +2802,6 @@ def PVWL():
         postsynaptic['PVWR'] += 1
         postsynaptic['VA12'] += 1
 
-
 def PVWR():
         postsynaptic['AVAR'] += 1
         postsynaptic['AVDR'] += 1
@@ -2998,7 +2980,6 @@ def RIGL():
         postsynaptic['AVER'] += 1
         postsynaptic['AVKL'] += 1
         postsynaptic['AVKR'] += 2
-        postsynaptic['BAGR'] += 1
         postsynaptic['BAGR'] += 1
         postsynaptic['DVC'] += 1
         postsynaptic['OLLL'] += 1
@@ -3647,7 +3628,6 @@ def SMDVL():
         postsynaptic['RIBR'] += 2
         postsynaptic['RIS'] += 1
         postsynaptic['RIVL'] += 1
-        postsynaptic['RIVL'] += 1
         postsynaptic['RMDDR'] += 1
         postsynaptic['RMDVL'] += 1
         postsynaptic['SMDDR'] += 4
@@ -3949,7 +3929,6 @@ def VA9():
         postsynaptic['VD7'] += 1
         postsynaptic['VD9'] += 10
 
-
 def VA10():
         postsynaptic['AVAL'] += 1
         postsynaptic['AVAR'] += 1
@@ -4116,7 +4095,7 @@ def VB8():
         postsynaptic['VA8'] += 3
         postsynaptic['VA9'] += 9
         postsynaptic['VA9'] += 1
-        postsynaptic['VB9'] += 3
+        postsynaptic['VB9'] += 3  
         postsynaptic['VB9'] += 3
         postsynaptic['VD10'] += 1
         postsynaptic['VD9'] += 10
