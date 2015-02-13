@@ -7,7 +7,6 @@
 from gopigo import *
 ## End Comment
 import time
-import copy
 
 # The postsynaptic dictionary contains the accumulated weighted values as the
 # connectome is executed
@@ -36,7 +35,7 @@ musVright = ['MVR07', 'MVR08', 'MVR09', 'MVR10', 'MVR11', 'MVR12', 'MVR13', 'MVR
 # This is the full C Elegans Connectome as expresed in the form of the Presynatptic
 # neurite and the postsynaptic neurites
 # postsynaptic['ADAR'][nextState] = (2 + postsynaptic['ADAR'][thisState])
-# arr=postsynaptic['AIBR']
+# arr=postsynaptic['AIBR'] potential optimization
 
 def ADAL():
         postsynaptic['ADAR'][nextState] = 2 + postsynaptic['ADAR'][thisState] 
