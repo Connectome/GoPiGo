@@ -4790,11 +4790,11 @@ def motorcontrol():
                 if pscheck in musDleft or pscheck in musVleft:
                    accumleft += postsynaptic[pscheck][thisState]
                    postsynaptic[pscheck][thisState] = 0                 #Both states have to be set to 0 once the muscle is fired, or
-                   postsynaptic[pscheck][nextState] = 0                 # it will keep returning beyond the threshold within one iteration.
+                   #postsynaptic[pscheck][nextState] = 0                 # it will keep returning beyond the threshold within one iteration.
                 elif pscheck in musDright or pscheck in musVright:
-                   accumright += postsynaptic[pscheck]
+                   accumright += postsynaptic[pscheck][thisState]
                    postsynaptic[pscheck][thisState] = 0
-                   postsynaptic[pscheck][nextState] = 0
+                   #postsynaptic[pscheck][nextState] = 0
         # We turn the wheels according to the motor weight accumulation
         new_speed = abs(accumleft) + abs(accumright)
         if new_speed > 150:
