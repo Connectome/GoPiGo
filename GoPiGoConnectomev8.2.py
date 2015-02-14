@@ -4,7 +4,7 @@
 # This application can be ran on the Raspberry Pi GoPiGo robot with a Sonar that represents Nose Touch when activated
 # To run standalone without a GoPiGo robot, simply comment out the sections with Start and End comments 
 ## Start Comment
-#from gopigo import *
+from gopigo import *
 ## End Comment
 import time
 
@@ -4790,19 +4790,11 @@ def motorcontrol():
                 if pscheck in musDleft or pscheck in musVleft:
                    accumleft += postsynaptic[pscheck][thisState]
                    postsynaptic[pscheck][thisState] = 0                 #Both states have to be set to 0 once the muscle is fired, or
-<<<<<<< HEAD
-                   #postsynaptic[pscheck][nextState] = 0                 # it will keep returning beyond the threshold within one iteration.
-                elif pscheck in musDright or pscheck in musVright:
-                   accumright += postsynaptic[pscheck][thisState]
-                   postsynaptic[pscheck][thisState] = 0
-                   #postsynaptic[pscheck][nextState] = 0
-=======
                    postsynaptic[pscheck][nextState] = 0                 # it will keep returning beyond the threshold within one iteration.
                 elif pscheck in musDright or pscheck in musVright:
                    accumright += postsynaptic[pscheck][thisState]
                    postsynaptic[pscheck][thisState] = 0
                    postsynaptic[pscheck][nextState] = 0
->>>>>>> 345c503bf7b3a7fced29f8b3b0137fda1da43a3f
         # We turn the wheels according to the motor weight accumulation
         new_speed = abs(accumleft) + abs(accumright)
         if new_speed > 150:
@@ -4811,40 +4803,40 @@ def motorcontrol():
                 new_speed = 75
         print "Left: ", accumleft, "Right:", accumright, "Speed: ", new_speed
         ## Start Commented section
-        # set_speed(new_speed)
-        # if accumleft == 0 and accumright == 0:
-        #         stop()
-        # elif accumright <= 0 and accumleft < 0:
-        #         set_speed(150)
-        #         turnratio = float(accumright) / float(accumleft)
-        #         # print "Turn Ratio: ", turnratio
-        #         if turnratio <= 0.6:
-        #                  left_rot()
-        #                  time.sleep(0.8)
-        #         elif turnratio >= 2:
-        #                  right_rot()
-        #                  time.sleep(0.8)
-        #         bwd()
-        #         time.sleep(0.5)
-        # elif accumright <= 0 and accumleft >= 0:
-        #         right_rot()
-        #         time.sleep(.8)
-        # elif accumright >= 0 and accumleft <= 0:
-        #         left_rot()
-        #         time.sleep(.8)
-        # elif accumright >= 0 and accumleft > 0:
-        #         turnratio = float(accumright) / float(accumleft)
-        #         # print "Turn Ratio: ", turnratio
-        #         if turnratio <= 0.6:
-        #                  left_rot()
-        #                  time.sleep(0.8)
-        #         elif turnratio >= 2:
-        #                  right_rot()
-        #                  time.sleep(0.8)
-        #         fwd()
-        #         time.sleep(0.5)
-        # else:
-        #         stop()
+        set_speed(new_speed)
+        if accumleft == 0 and accumright == 0:
+                stop()
+        elif accumright <= 0 and accumleft < 0:
+                set_speed(150)
+                turnratio = float(accumright) / float(accumleft)
+                # print "Turn Ratio: ", turnratio
+                if turnratio <= 0.6:
+                         left_rot()
+                         time.sleep(0.8)
+                elif turnratio >= 2:
+                         right_rot()
+                         time.sleep(0.8)
+                bwd()
+                time.sleep(0.5)
+        elif accumright <= 0 and accumleft >= 0:
+                right_rot()
+                time.sleep(.8)
+        elif accumright >= 0 and accumleft <= 0:
+                left_rot()
+                time.sleep(.8)
+        elif accumright >= 0 and accumleft > 0:
+                turnratio = float(accumright) / float(accumleft)
+                # print "Turn Ratio: ", turnratio
+                if turnratio <= 0.6:
+                         left_rot()
+                         time.sleep(0.8)
+                elif turnratio >= 2:
+                         right_rot()
+                         time.sleep(0.8)
+                fwd()
+                time.sleep(0.5)
+        else:
+                stop()
          ## End Commented section
         accumleft = 0
         accumright = 0
@@ -4880,8 +4872,8 @@ def runconnectome():
 # Create the dictionary      
 createpostsynaptic()
 dist=0
-#set_speed(120)
-print "Voltage: "#, volt()
+set_speed(120)
+print "Voltage: ", volt()
 tfood = 0
 try:
 ### Here is where you would put in a method to stimulate the neurons ###
@@ -4891,7 +4883,7 @@ try:
     while True:
         ## Start comment - use a fixed value if you want to stimulte nose touch
         ## use something like "dist = 27" if you want to stop nose stimulation
-        #dist = us_dist(15)
+        dist = us_dist(15)
         ## End Comment
 
         #Do we need to switch states at the end of each loop? No, this is done inside the runconnectome()
@@ -4931,11 +4923,8 @@ try:
        
 except KeyboardInterrupt:
     ## Start Comment
-    #stop()
+    stop()
     ## End Comment
     print "Ctrl+C detected. Program Stopped!"
     for pscheck in postsynaptic:
         print (pscheck,' ',postsynaptic[pscheck][0],' ',postsynaptic[pscheck][1])
-
-    
-
