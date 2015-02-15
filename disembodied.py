@@ -1,5 +1,5 @@
 # GoPiGo Connectome
-# Written by Timothy Busbice, Gabriel A. Garrett, Geoffrey Churchill (c) 2014, in Python 2.7
+# Written by Timothy Busbice, Gabriel Garrett, Geoffrey Churchill (c) 2014, in Python 2.7
 # The GoPiGo Connectome uses a Postsynaptic dictionary based on the C Elegans Connectome Model
 # This application can be ran on the Raspberry Pi GoPiGo robot with a Sonar that represents Nose Touch when activated
 # To run standalone without a GoPiGo robot, simply comment out the sections with Start and End comments 
@@ -4790,19 +4790,12 @@ def motorcontrol():
                 if pscheck in musDleft or pscheck in musVleft:
                    accumleft += postsynaptic[pscheck][thisState]
                    postsynaptic[pscheck][thisState] = 0                 #Both states have to be set to 0 once the muscle is fired, or
-<<<<<<< HEAD
                    #postsynaptic[pscheck][nextState] = 0                 # it will keep returning beyond the threshold within one iteration.
                 elif pscheck in musDright or pscheck in musVright:
                    accumright += postsynaptic[pscheck][thisState]
                    postsynaptic[pscheck][thisState] = 0
                    #postsynaptic[pscheck][nextState] = 0
-=======
-                   postsynaptic[pscheck][nextState] = 0                 # it will keep returning beyond the threshold within one iteration.
-                elif pscheck in musDright or pscheck in musVright:
-                   accumright += postsynaptic[pscheck][thisState]
-                   postsynaptic[pscheck][thisState] = 0
-                   postsynaptic[pscheck][nextState] = 0
->>>>>>> 345c503bf7b3a7fced29f8b3b0137fda1da43a3f
+
         # We turn the wheels according to the motor weight accumulation
         new_speed = abs(accumleft) + abs(accumright)
         if new_speed > 150:

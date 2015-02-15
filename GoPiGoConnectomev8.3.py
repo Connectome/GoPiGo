@@ -1,5 +1,5 @@
 # GoPiGo Connectome
-# Written by Timothy Busbice, Gabriel A. Garrett, Geoffrey Churchill (c) 2014, in Python 2.7
+# Written by Timothy Busbice, Gabriel Garrett, Geoffrey Churchill (c) 2014, in Python 2.7
 # The GoPiGo Connectome uses a Postsynaptic dictionary based on the C Elegans Connectome Model
 # This application can be ran on the Raspberry Pi GoPiGo robot with a Sonar that represents Nose Touch when activated
 # To run standalone without a GoPiGo robot, simply comment out the sections with Start and End comments 
