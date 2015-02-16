@@ -4865,6 +4865,7 @@ def runconnectome():
         for ps in postsynaptic:
                 if ps[:3] not in muscles and abs(postsynaptic[ps][thisState]) > threshold:
                         fireNeuron(ps)
+                        print (ps)
                         postsynaptic[ps] = [0,0]
         motorcontrol()
         thisState,nextState=nextState,thisState    
@@ -4931,4 +4932,3 @@ except KeyboardInterrupt:
         print (pscheck,' ',postsynaptic[pscheck][0],' ',postsynaptic[pscheck][1])
 
     
-
