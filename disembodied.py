@@ -7,7 +7,6 @@
 #from gopigo import *
 ## End Comment
 import time
-
 # The postsynaptic dictionary contains the accumulated weighted values as the
 # connectome is executed
 postsynaptic = {}
@@ -4868,8 +4867,8 @@ def runconnectome():
                         print (ps)
                         postsynaptic[ps] = [0,0]
         motorcontrol()
-        thisState,nextState=nextState,thisState    
-                         
+        thisState,nextState=nextState,thisState               
+
 
 # Create the dictionary      
 createpostsynaptic()

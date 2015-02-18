@@ -51,13 +51,14 @@ nextNeurons = []
 # It then determines if the neuron exceeds the threshold in the next state. If it does, it is appended to a nextNeurons list,
 # and the nextNeurons list is used to iterate through the dictionary to only read and fire the neurons that are supposed to fire.
 def incrementNeuron(neuronName, weight):
+        psn = postsynaptic[neuronName]
         global nextNeurons
-        postsynaptic[neuronName][nextState] = weight + postsynaptic[neuronName][thisState]
-        if postsynaptic[neuronName][nextState] > threshold and not(postsynaptic[neuronName][2]):   #2 represents the boolean column for if neuron already appended
+        psn[nextState] = weight + psn[thisState]
+        if psn[nextState] > threshold and not(psn[2]):   #2 represents the boolean column for if neuron already appended
                 #print (postsynaptic[neuronName][2])
                 #print neuronName
                 nextNeurons.append(neuronName) #return neuronName #append to list here instead?
-                postsynaptic[neuronName][2] = True
+                psn[2] = True
         
 
 def ADAL():
@@ -4872,7 +4873,7 @@ def fireNeuron(fneuron):
         if fneuron != "MVULVA":
                 f = eval(fneuron)
                 f()
-                print "Function: " + fneuron
+                #print "Function: " + fneuron
                 #postsynaptic[fneuron][2] = False
 
 def runconnectome():
