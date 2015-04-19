@@ -11,7 +11,7 @@
 # iterating through each neuron, we now iterate only through the relevant muscle neurons.
 
 ## Start Comment
-#from gopigo import *
+from gopigo import *
 ## End Comment
 import time
 import copy
@@ -4824,40 +4824,40 @@ def motorcontrol():
         accumleft = 0
         accumright = 0
         ## Start Commented section
-        # set_speed(new_speed)
-        # if accumleft == 0 and accumright == 0:
-        #         stop()
-        # elif accumright <= 0 and accumleft < 0:
-        #         set_speed(150)
-        #         turnratio = float(accumright) / float(accumleft)
-        #         # print "Turn Ratio: ", turnratio
-        #         if turnratio <= 0.6:
-        #                  left_rot()
-        #                  time.sleep(0.8)
-        #         elif turnratio >= 2:
-        #                  right_rot()
-        #                  time.sleep(0.8)
-        #         bwd()
-        #         time.sleep(0.5)
-        # elif accumright <= 0 and accumleft >= 0:
-        #         right_rot()
-        #         time.sleep(.8)
-        # elif accumright >= 0 and accumleft <= 0:
-        #         left_rot()
-        #         time.sleep(.8)
-        # elif accumright >= 0 and accumleft > 0:
-        #         turnratio = float(accumright) / float(accumleft)
-        #         # print "Turn Ratio: ", turnratio
-        #         if turnratio <= 0.6:
-        #                  left_rot()
-        #                  time.sleep(0.8)
-        #         elif turnratio >= 2:
-        #                  right_rot()
-        #                  time.sleep(0.8)
-        #         fwd()
-        #         time.sleep(0.5)
-        # else:
-        #         stop()
+        set_speed(new_speed)
+        if accumleft == 0 and accumright == 0:
+                stop()
+        elif accumright <= 0 and accumleft < 0:
+                set_speed(150)
+                turnratio = float(accumright) / float(accumleft)
+                # print "Turn Ratio: ", turnratio
+                if turnratio <= 0.6:
+                         left_rot()
+                         time.sleep(0.8)
+                elif turnratio >= 2:
+                         right_rot()
+                         time.sleep(0.8)
+                bwd()
+                time.sleep(0.5)
+        elif accumright <= 0 and accumleft >= 0:
+                right_rot()
+                time.sleep(.8)
+        elif accumright >= 0 and accumleft <= 0:
+                left_rot()
+                time.sleep(.8)
+        elif accumright >= 0 and accumleft > 0:
+                turnratio = float(accumright) / float(accumleft)
+                # print "Turn Ratio: ", turnratio
+                if turnratio <= 0.6:
+                         left_rot()
+                         time.sleep(0.8)
+                elif turnratio >= 2:
+                         right_rot()
+                         time.sleep(0.8)
+                fwd()
+                time.sleep(0.5)
+        else:
+                stop()
          ## End Commented section
         accumleft = 0
         accumright = 0
@@ -4906,7 +4906,7 @@ def runconnectome():
 # Create the dictionary      
 createpostSynaptic()
 dist=0
-#set_speed(120)
+set_speed(120)
 print "Voltage: "#, volt()
 tfood = 0
 try:
@@ -4917,7 +4917,7 @@ try:
     while True:
         ## Start comment - use a fixed value if you want to stimulte nose touch
         ## use something like "dist = 27" if you want to stop nose stimulation
-        #dist = us_dist(15)
+        dist = us_dist(15)
         ## End Comment
      #Do we need to switch states at the end of each loop? No, this is done inside the runconnectome()
         #function, called inside each loop.
@@ -4954,7 +4954,7 @@ try:
        
 except KeyboardInterrupt:
     ## Start Comment
-    #stop()
+    stop()
     ## End Comment
     print "Ctrl+C detected. Program Stopped!"
     for pscheck in postSynaptic:

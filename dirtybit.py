@@ -7,7 +7,6 @@
 #from gopigo import *
 ## End Comment
 import time
-import timeit
 # The postSynaptic dictionary contains the accumulated weighted values as the
 # connectome is executed
 postSynaptic = {}
@@ -20,8 +19,6 @@ nextState = 1
 # The Threshold is the maximum sccumulated value that must be exceeded before
 # the Neurite will fire
 threshold = 30
-start = time.time()
-end = time.time()
 
 # Accumulators are used to decide the value to send to the Left and Right motors
 # of the GoPiGo robot
@@ -4794,12 +4791,12 @@ def motorcontrol():
         # used to move the left and right motors of the robot
         for muscle in muscleList:
                 if muscle in mLeft:
-                   accumleft += postSynaptic[muscle][nextState]
-                   postSynaptic[muscle][nextState] = 0                 #Both states have to be set to 0 once the muscle is fired, or
+                   accumleft += postSynaptic[muscle][thisState]
+                   postSynaptic[muscle][thisState] = 0                 #Both states have to be set to 0 once the muscle is fired, or
                    #postSynaptic[muscle][nextState] = 0                 # it will keep returning beyond the threshold within one iteration.
                 elif muscle in mRight:
-                   accumright += postSynaptic[muscle][nextState]
-                   postSynaptic[muscle][nextState] = 0
+                   accumright += postSynaptic[muscle][thisState]
+                   postSynaptic[muscle][thisState] = 0
                    #postSynaptic[muscle][nextState] = 0
 
         # We turn the wheels according to the motor weight accumulation
@@ -4847,7 +4844,7 @@ def motorcontrol():
          ## End Commented section
         accumleft = 0
         accumright = 0
-        time.sleep(0.5)
+        time.sleep(0.1)
 
 
 def dendriteAccumulate(dneuron):
@@ -4871,11 +4868,10 @@ def runconnectome():
         for ps in postSynaptic:
                 if ps[:3] not in muscles and abs(postSynaptic[ps][thisState]) > threshold:
                         fireNeuron(ps)
-                        #print (ps)
+                        print (ps)
                         postSynaptic[ps] = [0,0]
         motorcontrol()
-        thisState,nextState=nextState,thisState
-        #print end - start            
+        thisState,nextState=nextState,thisState               
 
 
 # Create the dictionary      
@@ -4923,7 +4919,7 @@ try:
                     dendriteAccumulate("ASJR")
                     dendriteAccumulate("ASJL")
                     runconnectome()
-                    time.sleep(0.5)
+                    time.sleep(0.1)
             tfood += 0.5
             if (tfood > 20):
                     tfood = 0
