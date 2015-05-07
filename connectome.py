@@ -4800,15 +4800,17 @@ def motorcontrol():
 
         # accumulate left and right muscles and the accumulated values are
         # used to move the left and right motors of the robot
-        for muscle in muscleList:
+        for muscle in muscleList:       #if this doesn't work, do muscle in postSynaptic
                 if muscle in mLeft:
+                #if muscle in musDleft or muscle in musVleft:
                    accumleft += postSynaptic[muscle][nextState]
                    #accumleft = accumleft + postSynaptic[muscle][thisState] #what???  For some reason, thisState weight is always 0.
                    #postSynaptic[muscle][thisState] = 0
-                   print muscle, "Before", postSynaptic[muscle][thisState], accumleft                #Both states have to be set to 0 once the muscle is fired, or
+                   #print muscle, "Before", postSynaptic[muscle][thisState], accumleft                #Both states have to be set to 0 once the muscle is fired, or
                    postSynaptic[muscle][nextState] = 0
-                   print muscle, "After", postSynaptic[muscle][thisState], accumleft                   # it will keep returning beyond the threshold within one iteration.
+                   #print muscle, "After", postSynaptic[muscle][thisState], accumleft                   # it will keep returning beyond the threshold within one iteration.
                 elif muscle in mRight:
+                #elif muscle in musDright or muscle in musVright:
                    accumright += postSynaptic[muscle][nextState]
                    #accumleft = accumright + postSynaptic[muscle][thisState] #what???
                    #postSynaptic[muscle][thisState] = 0
@@ -4821,8 +4823,6 @@ def motorcontrol():
         elif new_speed < 75:
                 new_speed = 75
         print "Left: ", accumleft, "Right:", accumright, "Speed: ", new_speed
-        accumleft = 0
-        accumright = 0
         ## Start Commented section
         set_speed(new_speed)
         if accumleft == 0 and accumright == 0:
@@ -4861,7 +4861,7 @@ def motorcontrol():
          ## End Commented section
         accumleft = 0
         accumright = 0
-        time.sleep(0.5)
+        #time.sleep(0.5)
 
 
 def dendriteAccumulate(dneuron):
@@ -4898,6 +4898,7 @@ def runconnectome():
                 #print ps
                 #print "Before Clone: ", postSynaptic[ps][thisState]
                 postSynaptic[ps][thisState] = copy.deepcopy(postSynaptic[ps][nextState]) #fired neurons keep getting reset to previous weight
+                        #this deep copy is not in the functioning version currently.
                 #print "After Clone: ", postSynaptic[ps][thisState]
         thisState,nextState=nextState,thisState               
 
@@ -4907,7 +4908,7 @@ def runconnectome():
 createpostSynaptic()
 dist=0
 set_speed(120)
-print "Voltage: "#, volt()
+print "Voltage: ", volt()
 tfood = 0
 try:
 ### Here is where you would put in a method to stimulate the neurons ###
