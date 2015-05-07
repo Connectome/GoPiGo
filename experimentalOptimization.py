@@ -4825,6 +4825,7 @@ def motorcontrol():
         print "Left: ", accumleft, "Right:", accumright, "Speed: ", new_speed
         ## Start Commented section
         set_speed(new_speed)
+        print "Speed set: ", new_speed
         if accumleft == 0 and accumright == 0:
                 stop()
         elif accumright <= 0 and accumleft < 0:
