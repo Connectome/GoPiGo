@@ -24,3 +24,15 @@ Each time a neuron or muscle is activated, the weights are set to zero so that a
 To be clear, there is no programming that is directing the robot to stop or rotate a wheel in one direction or another. It is only the collective weighted values being generated from the simulated worm connectome that guides the actions of the robot. It was very difficult to contain the connectome into a single application and make it run on a Raspberry Pi but this is a good attempt from the evidence I have seen. This is truly a totally autonomous robot that is reacting to its environment through a simulated brain of a nematode. 
 
 I encourage others to use the connectome program and try to change the methods to make the program run more efficiently and react better to the environment. However, I do not encourage any changes to the connectomic structure of the program itself if you are interested in studying the nervous system of the C elegans nematode. Changes to the connectome, means you are creating your own simulated nervous system and away from the worms nervous system, which might be fun to explore as well. 
+
+### Descriptions of individual files
+
+* `connectome.py`
+The embodied version of the AI, which is to be run on the physical manifestation of the being (to say the least).
+* `disembodiedConnectome.py`
+The version that is to be run without a physical manifestation and has all sensor-related variables commented out.
+* `experimentalOptimization.py`, `disembodiedEO.py`
+(Self-Explanatory)
+* `GoPiGoConnectome.py`
+An old version for the connectome.
+
