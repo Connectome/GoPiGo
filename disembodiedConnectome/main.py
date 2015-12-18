@@ -96,9 +96,11 @@ def runconnectome():
     global nextState
     global timestep
 
+    yielded_value = "None"
     for ps in postSynaptic:
         if ps[:3] not in muscles and abs(postSynaptic[ps][thisState]) > threshold:
             fireNeuron(ps)
+            yielded_value = ps
             #print ps
             #print (ps)
             #postSynaptic[ps][nextState] = 0
@@ -110,7 +112,10 @@ def runconnectome():
         postSynaptic[ps][thisState] = copy.deepcopy(postSynaptic[ps][nextState]) #fired neurons keep getting reset to previous weight
         #print "After Clone: ", postSynaptic[ps][thisState]
     thisState,nextState=nextState,thisState 
-    timestep += 1              
+    timestep += 1
+
+    print "here", yielded_value
+    return bytes(yielded_value)
 
 dist=0
 
@@ -142,7 +147,7 @@ def main():
                 dendriteAccumulate("OLQDR")
                 dendriteAccumulate("OLQVR")
                 dendriteAccumulate("OLQVL")
-                runconnectome()
+                yield runconnectome()
             else:
                 if tfood < 2:
                     print "FOOD"
@@ -154,7 +159,7 @@ def main():
                     dendriteAccumulate("ASIR")
                     dendriteAccumulate("ASJR")
                     dendriteAccumulate("ASJL")
-                    runconnectome()
+                    yield runconnectome()
                     time.sleep(0.5)
                 tfood += 0.5
                 if (tfood > 20):
