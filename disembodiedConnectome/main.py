@@ -27,6 +27,7 @@ global thisState
 global nextState
 thisState = 0 
 nextState = 1
+timestep = 1
 
 # The Threshold is the maximum sccumulated value that must be exceeded before
 # the Neurite will fire
@@ -93,6 +94,7 @@ def runconnectome():
     # the threshold 
     global thisState
     global nextState
+    global timestep
 
     for ps in postSynaptic:
         if ps[:3] not in muscles and abs(postSynaptic[ps][thisState]) > threshold:
@@ -107,58 +109,65 @@ def runconnectome():
         #print "Before Clone: ", postSynaptic[ps][thisState]
         postSynaptic[ps][thisState] = copy.deepcopy(postSynaptic[ps][nextState]) #fired neurons keep getting reset to previous weight
         #print "After Clone: ", postSynaptic[ps][thisState]
-    thisState,nextState=nextState,thisState               
+    thisState,nextState=nextState,thisState 
+    timestep += 1              
 
 dist=0
 
 tfood = 0
-try:
-### Here is where you would put in a method to stimulate the neurons ###
-### We stimulate chemosensory neurons constantly unless nose touch   ###
-### (sonar) is stimulated and then we fire nose touch neurites       ###
-### Use CNTRL-C to stop the program
-    while True:
-        ## Start comment - use a fixed value if you want to stimulte nose touch
-        ## use something like "dist = 27" if you want to stop nose stimulation
-        #dist = us_dist(15)
-        ## End Comment
-     	#Do we need to switch states at the end of each loop? No, this is done inside the runconnectome()
-        #function, called inside each loop.
-        if dist>0 and dist<30:
-            print "OBSTACLE (Nose Touch)", dist 
-            dendriteAccumulate("FLPR")
-            dendriteAccumulate("FLPL")
-            dendriteAccumulate("ASHL")
-            dendriteAccumulate("ASHR")
-            dendriteAccumulate("IL1VL")
-            dendriteAccumulate("IL1VR")
-            dendriteAccumulate("OLQDL")
-            dendriteAccumulate("OLQDR")
-            dendriteAccumulate("OLQVR")
-            dendriteAccumulate("OLQVL")
-            runconnectome()
-        else:
-            if tfood < 2:
-                print "FOOD"
-                dendriteAccumulate("ADFL")
-                dendriteAccumulate("ADFR")
-                dendriteAccumulate("ASGR")
-                dendriteAccumulate("ASGL")
-                dendriteAccumulate("ASIL")
-                dendriteAccumulate("ASIR")
-                dendriteAccumulate("ASJR")
-                dendriteAccumulate("ASJL")
+
+def main():
+    global tfood
+    try:
+    ### Here is where you would put in a method to stimulate the neurons ###
+    ### We stimulate chemosensory neurons constantly unless nose touch   ###
+    ### (sonar) is stimulated and then we fire nose touch neurites       ###
+    ### Use CNTRL-C to stop the program
+        while True:
+            ## Start comment - use a fixed value if you want to stimulte nose touch
+            ## use something like "dist = 27" if you want to stop nose stimulation
+            #dist = us_dist(15)
+            ## End Comment
+         	#Do we need to switch states at the end of each loop? No, this is done inside the runconnectome()
+            #function, called inside each loop.
+            if dist>0 and dist<30:
+                print "OBSTACLE (Nose Touch)", dist 
+                dendriteAccumulate("FLPR")
+                dendriteAccumulate("FLPL")
+                dendriteAccumulate("ASHL")
+                dendriteAccumulate("ASHR")
+                dendriteAccumulate("IL1VL")
+                dendriteAccumulate("IL1VR")
+                dendriteAccumulate("OLQDL")
+                dendriteAccumulate("OLQDR")
+                dendriteAccumulate("OLQVR")
+                dendriteAccumulate("OLQVL")
                 runconnectome()
-                time.sleep(0.5)
-            tfood += 0.5
-            if (tfood > 20):
-                tfood = 0
-        
-       
-except KeyboardInterrupt:
-    ## Start Comment
-    #stop()
-    ## End Comment
-    print "Ctrl+C detected. Program Stopped!"
-    for pscheck in postSynaptic:
-        print (pscheck,' ',postSynaptic[pscheck][0],' ',postSynaptic[pscheck][1])
+            else:
+                if tfood < 2:
+                    print "FOOD"
+                    dendriteAccumulate("ADFL")
+                    dendriteAccumulate("ADFR")
+                    dendriteAccumulate("ASGR")
+                    dendriteAccumulate("ASGL")
+                    dendriteAccumulate("ASIL")
+                    dendriteAccumulate("ASIR")
+                    dendriteAccumulate("ASJR")
+                    dendriteAccumulate("ASJL")
+                    runconnectome()
+                    time.sleep(0.5)
+                tfood += 0.5
+                if (tfood > 20):
+                    tfood = 0
+            
+           
+    except KeyboardInterrupt:
+        ## Start Comment
+        #stop()
+        ## End Comment
+        print "Ctrl+C detected. Program Stopped!"
+        for pscheck in postSynaptic:
+            print (pscheck,' ',postSynaptic[pscheck][0],' ',postSynaptic[pscheck][1])
+
+if __name__ == '__main__':
+    main()
