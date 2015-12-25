@@ -15,11 +15,15 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-d','--disembodied', help='Run without sensor data', action='store_true')
 disembodied = parser.parse_args().disembodied
 
+print disembodied
+
 if not disembodied:
         from gopigo import fwd, bwd, left_rot, right_rot, stop, set_speed, us_dist, volt
 
 import time
 import copy
+import signal
+import sys
 
 # The postSynaptic dictionary contains the accumulated weighted values as the
 # connectome is executed
@@ -4910,18 +4914,19 @@ def runconnectome():
 createpostSynaptic()
 
 dist=0
-set_speed(120)
 
-print "Voltage: ", volt()
+if not disembodied:
+        set_speed(120)
+        print "Voltage: ", volt()
 
 tfood = 0
 
-try:
+def main():
         """Here is where you would put in a method to stimulate the neurons
         We stimulate chemosensory neurons constantly unless nose touch
         (sonar) is stimulated and then we fire nose touch neurites.
         """
-### Use CNTRL-C to stop the program
+
         while True:
                 if not disembodied:
                         dist = us_dist(15)
@@ -4962,10 +4967,19 @@ try:
                         if (tfood > 20):
                                 tfood = 0
 
-except KeyboardInterrupt:
+def keyboard_interrupt_handler(a, b):
+        """Use CNTRL-C to stop the program."""
+
         if not disembodied:
                 stop()
 
         print "Ctrl+C detected. Program Stopped!"
         for pscheck in postSynaptic:
                 print (pscheck,' ',postSynaptic[pscheck][0],' ',postSynaptic[pscheck][1])
+
+        sys.exit(0)
+
+if __name__ == '__main__':
+        signal.signal(signal.SIGINT, keyboard_interrupt_handler)
+        main()
+
