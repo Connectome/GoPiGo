@@ -13,9 +13,15 @@
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('-d','--disembodied', help='Run without sensor data', action='store_true')
+parser.add_argument('-v', '--verbose', action='count', default=0)
+# three levels of verbosity: [], -v, -vv
+# 0: only print starting and exiting messages
+# 1: print only when obstacles/food found
+# 2: print speed, left and right every time
 disembodied = parser.parse_args().disembodied
+verbosity = parser.parse_args().verbose
 
-print disembodied
+print "Running on Robot: " + str(not disembodied)
 
 if not disembodied:
         from gopigo import fwd, bwd, left_rot, right_rot, stop, set_speed, us_dist, volt
@@ -83,7 +89,6 @@ def ADAL():
         postSynaptic['RIML'][nextState] += 3
         postSynaptic['RIPL'][nextState] += 1
         postSynaptic['SMDVR'][nextState] += 2
-        print (nextState)
 
 def ADAR():
         postSynaptic['ADAL'][nextState] += 1
@@ -166,7 +171,6 @@ def ADFL():
         postSynaptic['RIGL'][nextState] += 1
         postSynaptic['RIR'][nextState] += 2
         postSynaptic['SMBVL'][nextState] += 2
-        #print (postSynaptic['ADAL'][nextState])
 
 def ADFR():
         postSynaptic['ADAR'][nextState] += 2
@@ -4827,7 +4831,8 @@ def motorcontrol():
                 new_speed = 150
         elif new_speed < 75:
                 new_speed = 75
-        print "Left: ", accumleft, "Right:", accumright, "Speed: ", new_speed
+        if verbosity > 1:
+                print "Left: ", accumleft, "Right:", accumright, "Speed: ", new_speed
         
         if not disembodied:
                 set_speed(new_speed)
@@ -4938,7 +4943,8 @@ def main():
                 # Do we need to switch states at the end of each loop? No, this is done inside the runconnectome()
                 # function, called inside each loop.
                 if dist>0 and dist<30:
-                        print "OBSTACLE (Nose Touch)", dist 
+                        if verbosity > 0:
+                                print "OBSTACLE (Nose Touch)", dist 
                         dendriteAccumulate("FLPR")
                         dendriteAccumulate("FLPL")
                         dendriteAccumulate("ASHL")
@@ -4952,7 +4958,8 @@ def main():
                         runconnectome()
                 else:
                         if tfood < 2:
-                                print "FOOD"
+                                if verbosity > 0:
+                                        print "FOOD"
                                 dendriteAccumulate("ADFL")
                                 dendriteAccumulate("ADFR")
                                 dendriteAccumulate("ASGR")
