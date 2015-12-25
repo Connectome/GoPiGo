@@ -10,11 +10,17 @@
 # This version also explicitly lists all left and right muscles, so that during the muscle checks for the motor control function, instead of 
 # iterating through each neuron, we now iterate only through the relevant muscle neurons.
 
-## Start Comment
-from gopigo import *
-## End Comment
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('-d','--disembodied', help='Run without sensor data', action='store_true')
+disembodied = parser.parse_args().disembodied
+
+if not disembodied:
+        from gopigo import fwd, bwd, left_rot, right_rot, stop, set_speed, us_dist, volt
+
 import time
 import copy
+
 # The postSynaptic dictionary contains the accumulated weighted values as the
 # connectome is executed
 postSynaptic = {}
@@ -46,10 +52,12 @@ musVleft = ['MVL07', 'MVL08', 'MVL09', 'MVL10', 'MVL11', 'MVL12', 'MVL13', 'MVL1
 musDright = ['MDR07', 'MDR08', 'MDR09', 'MDR10', 'MDR11', 'MDR12', 'MDR13', 'MDR14', 'MDR15', 'MDR16', 'MDR17', 'MDR18', 'MDR19', 'MDR20', 'MDL21', 'MDR22', 'MDR23']
 musVright = ['MVR07', 'MVR08', 'MVR09', 'MVR10', 'MVR11', 'MVR12', 'MVR13', 'MVR14', 'MVR15', 'MVR16', 'MVR17', 'MVR18', 'MVR19', 'MVR20', 'MVL21', 'MVR22', 'MVR23']
 
-# This is the full C Elegans Connectome as expresed in the form of the Presynatptic
-# neurite and the postSynaptic neurites
-# postSynaptic['ADAR'][nextState] = (2 + postSynaptic['ADAR'][thisState])
-# arr=postSynaptic['AIBR'] potential optimization
+"""This is the full C Elegans Connectome as expresed in the form of the Presynatptic
+neurite and the postSynaptic neurites.
+
+postSynaptic['ADAR'][nextState] = (2 + postSynaptic['ADAR'][thisState])
+arr=postSynaptic['AIBR'] potential optimization
+"""
 
 def ADAL():
         postSynaptic['ADAR'][nextState] += 2
@@ -72,7 +80,6 @@ def ADAL():
         postSynaptic['RIPL'][nextState] += 1
         postSynaptic['SMDVR'][nextState] += 2
         print (nextState)
-
 
 def ADAR():
         postSynaptic['ADAL'][nextState] += 1
@@ -2824,7 +2831,6 @@ def PVWL():
         postSynaptic['PVWR'][nextState] += 1
         postSynaptic['VA12'][nextState] += 1
 
-
 def PVWR():
         postSynaptic['AVAR'][nextState] += 1
         postSynaptic['AVDR'][nextState] += 1
@@ -3952,7 +3958,6 @@ def VA9():
         postSynaptic['VD7'][nextState] += 1
         postSynaptic['VD9'][nextState] += 10
 
-
 def VA10():
         postSynaptic['AVAL'][nextState] += 1
         postSynaptic['AVAR'][nextState] += 1
@@ -4389,8 +4394,7 @@ def VD13():
         postSynaptic['PVCR'][nextState] += 1
         postSynaptic['PVPL'][nextState] += 2
         postSynaptic['VA12'][nextState] += 1
-        
-        
+
 def createpostSynaptic():
         # The postSynaptic dictionary maintains the accumulated values for
         # each neuron and muscle. The Accumulated values are initialized to Zero
@@ -4792,29 +4796,26 @@ def createpostSynaptic():
         postSynaptic['VD8'] = [0,0]
         postSynaptic['VD9'] = [0,0]
 
-#global postSynapticNext = copy.deepcopy(postSynaptic)
-
 def motorcontrol():
         global accumright
         global accumleft
 
         # accumulate left and right muscles and the accumulated values are
         # used to move the left and right motors of the robot
-        for muscle in muscleList:       #if this doesn't work, do muscle in postSynaptic
+
+        for muscle in muscleList: # if this doesn't work, do muscle in postSynaptic
                 if muscle in mLeft:
-                #if muscle in musDleft or muscle in musVleft:
-                   accumleft += postSynaptic[muscle][nextState]
-                   #accumleft = accumleft + postSynaptic[muscle][thisState] #what???  For some reason, thisState weight is always 0.
-                   #postSynaptic[muscle][thisState] = 0
-                   #print muscle, "Before", postSynaptic[muscle][thisState], accumleft                #Both states have to be set to 0 once the muscle is fired, or
-                   postSynaptic[muscle][nextState] = 0
-                   #print muscle, "After", postSynaptic[muscle][thisState], accumleft                   # it will keep returning beyond the threshold within one iteration.
+                        accumleft += postSynaptic[muscle][nextState] # vs thisState??? 
+
+                        #print muscle, "Before", postSynaptic[muscle][thisState], accumleft
+                        postSynaptic[muscle][nextState] = 0
+                        #print muscle, "After", postSynaptic[muscle][thisState], accumleft
+
                 elif muscle in mRight:
-                #elif muscle in musDright or muscle in musVright:
-                   accumright += postSynaptic[muscle][nextState]
-                   #accumleft = accumright + postSynaptic[muscle][thisState] #what???
-                   #postSynaptic[muscle][thisState] = 0
-                   postSynaptic[muscle][nextState] = 0
+                        accumright += postSynaptic[muscle][nextState] # vs thisState??? 
+
+                        #postSynaptic[muscle][thisState] = 0
+                        postSynaptic[muscle][nextState] = 0
 
         # We turn the wheels according to the motor weight accumulation
         new_speed = abs(accumleft) + abs(accumright)
@@ -4823,46 +4824,46 @@ def motorcontrol():
         elif new_speed < 75:
                 new_speed = 75
         print "Left: ", accumleft, "Right:", accumright, "Speed: ", new_speed
-        ## Start Commented section
-        set_speed(new_speed)
-        if accumleft == 0 and accumright == 0:
-                stop()
-        elif accumright <= 0 and accumleft < 0:
-                set_speed(150)
-                turnratio = float(accumright) / float(accumleft)
-                # print "Turn Ratio: ", turnratio
-                if turnratio <= 0.6:
-                         left_rot()
-                         time.sleep(0.8)
-                elif turnratio >= 2:
-                         right_rot()
-                         time.sleep(0.8)
-                bwd()
-                time.sleep(0.5)
-        elif accumright <= 0 and accumleft >= 0:
-                right_rot()
-                time.sleep(.8)
-        elif accumright >= 0 and accumleft <= 0:
-                left_rot()
-                time.sleep(.8)
-        elif accumright >= 0 and accumleft > 0:
-                turnratio = float(accumright) / float(accumleft)
-                # print "Turn Ratio: ", turnratio
-                if turnratio <= 0.6:
-                         left_rot()
-                         time.sleep(0.8)
-                elif turnratio >= 2:
-                         right_rot()
-                         time.sleep(0.8)
-                fwd()
-                time.sleep(0.5)
-        else:
-                stop()
-         ## End Commented section
+        
+        if not disembodied:
+                set_speed(new_speed)
+                if accumleft == 0 and accumright == 0:
+                        stop()
+                elif accumright <= 0 and accumleft < 0:
+                        set_speed(150)
+                        turnratio = float(accumright) / float(accumleft)
+                        # print "Turn Ratio: ", turnratio
+                        if turnratio <= 0.6:
+                                 left_rot()
+                                 time.sleep(0.8)
+                        elif turnratio >= 2:
+                                 right_rot()
+                                 time.sleep(0.8)
+                        bwd()
+                        time.sleep(0.5)
+                elif accumright <= 0 and accumleft >= 0:
+                        right_rot()
+                        time.sleep(.8)
+                elif accumright >= 0 and accumleft <= 0:
+                        left_rot()
+                        time.sleep(.8)
+                elif accumright >= 0 and accumleft > 0:
+                        turnratio = float(accumright) / float(accumleft)
+                        # print "Turn Ratio: ", turnratio
+                        if turnratio <= 0.6:
+                                 left_rot()
+                                 time.sleep(0.8)
+                        elif turnratio >= 2:
+                                 right_rot()
+                                 time.sleep(0.8)
+                        fwd()
+                        time.sleep(0.5)
+                else:
+                        stop()
+
         accumleft = 0
         accumright = 0
         #time.sleep(0.5)
-
 
 def dendriteAccumulate(dneuron):
         f = eval(dneuron)
@@ -4873,92 +4874,98 @@ def fireNeuron(fneuron):
         if fneuron != "MVULVA":
                 f = eval(fneuron)
                 f()
-                #postSynaptic[fneuron][nextState] = 0
-                #postSynaptic[fneuron][thisState] = 0
+                # postSynaptic[fneuron][thisState] = 0
                 postSynaptic[fneuron][nextState] = 0
 
 def runconnectome():
-        # Each time a set of neuron is stimulated, this method will execute
-        # The weigted values are accumulated in the postSynaptic array
-        # Once the accumulation is read, we see what neurons are greater
-        # then the threshold and fire the neuron or muscle that has exceeded
-        # the threshold 
+        """Each time a set of neuron is stimulated, this method will execute
+        The weigted values are accumulated in the postSynaptic array
+        Once the accumulation is read, we see what neurons are greater
+        then the threshold and fire the neuron or muscle that has exceeded
+        the threshold.
+        """
         global thisState
         global nextState
 
         for ps in postSynaptic:
                 if ps[:3] not in muscles and abs(postSynaptic[ps][thisState]) > threshold:
                         fireNeuron(ps)
-                        #print ps
-                        #print (ps)
-                        #postSynaptic[ps][nextState] = 0
         motorcontrol()
         for ps in postSynaptic:
-                #if postSynaptic[ps][thisState] != 0:
-                #print ps
-                #print "Before Clone: ", postSynaptic[ps][thisState]
-                postSynaptic[ps][thisState] = copy.deepcopy(postSynaptic[ps][nextState]) #fired neurons keep getting reset to previous weight
-                        #this deep copy is not in the functioning version currently.
-                #print "After Clone: ", postSynaptic[ps][thisState]
-        thisState,nextState=nextState,thisState               
+                # if postSynaptic[ps][thisState] != 0:
+                #         print ps
+                #         print "Before Clone: ", postSynaptic[ps][thisState]
 
+                # fired neurons keep getting reset to previous weight
+                # wtf deepcopy -- So, the concern is that the deepcopy doesnt
+                # scale up to larger neural networks?? 
+                postSynaptic[ps][thisState] = copy.deepcopy(postSynaptic[ps][nextState]) 
 
+                # this deep copy is not in the functioning version currently.
+                # print "After Clone: ", postSynaptic[ps][thisState]
+
+        thisState,nextState=nextState,thisState
 
 # Create the dictionary      
 createpostSynaptic()
+
 dist=0
 set_speed(120)
-print "Voltage: ", volt()
-tfood = 0
-try:
-### Here is where you would put in a method to stimulate the neurons ###
-### We stimulate chemosensory neurons constantly unless nose touch   ###
-### (sonar) is stimulated and then we fire nose touch neurites       ###
-### Use CNTRL-C to stop the program
-    while True:
-        ## Start comment - use a fixed value if you want to stimulte nose touch
-        ## use something like "dist = 27" if you want to stop nose stimulation
-        dist = us_dist(15)
-        ## End Comment
-     #Do we need to switch states at the end of each loop? No, this is done inside the runconnectome()
-        #function, called inside each loop.
-        if dist>0 and dist<30:
-            print "OBSTACLE (Nose Touch)", dist 
-            dendriteAccumulate("FLPR")
-            dendriteAccumulate("FLPL")
-            dendriteAccumulate("ASHL")
-            dendriteAccumulate("ASHR")
-            dendriteAccumulate("IL1VL")
-            dendriteAccumulate("IL1VR")
-            dendriteAccumulate("OLQDL")
-            dendriteAccumulate("OLQDR")
-            dendriteAccumulate("OLQVR")
-            dendriteAccumulate("OLQVL")
-            runconnectome()
-        else:
-            if tfood < 2:
-                    print "FOOD"
-                    dendriteAccumulate("ADFL")
-                    dendriteAccumulate("ADFR")
-                    dendriteAccumulate("ASGR")
-                    dendriteAccumulate("ASGL")
-                    dendriteAccumulate("ASIL")
-                    dendriteAccumulate("ASIR")
-                    dendriteAccumulate("ASJR")
-                    dendriteAccumulate("ASJL")
-                    runconnectome()
-                    time.sleep(0.5)
-            tfood += 0.5
-            if (tfood > 20):
-                    tfood = 0
-        
-       
-except KeyboardInterrupt:
-    ## Start Comment
-    stop()
-    ## End Comment
-    print "Ctrl+C detected. Program Stopped!"
-    for pscheck in postSynaptic:
-        print (pscheck,' ',postSynaptic[pscheck][0],' ',postSynaptic[pscheck][1])
 
-    
+print "Voltage: ", volt()
+
+tfood = 0
+
+try:
+        """Here is where you would put in a method to stimulate the neurons
+        We stimulate chemosensory neurons constantly unless nose touch
+        (sonar) is stimulated and then we fire nose touch neurites.
+        """
+### Use CNTRL-C to stop the program
+        while True:
+                if not disembodied:
+                        dist = us_dist(15)
+                else:
+                        # use a fixed value if you want to stimulte nose touch
+                        # use something like "dist = 27" if you want to stop nose stimulation
+                        dist = 27
+
+                # Do we need to switch states at the end of each loop? No, this is done inside the runconnectome()
+                # function, called inside each loop.
+                if dist>0 and dist<30:
+                        print "OBSTACLE (Nose Touch)", dist 
+                        dendriteAccumulate("FLPR")
+                        dendriteAccumulate("FLPL")
+                        dendriteAccumulate("ASHL")
+                        dendriteAccumulate("ASHR")
+                        dendriteAccumulate("IL1VL")
+                        dendriteAccumulate("IL1VR")
+                        dendriteAccumulate("OLQDL")
+                        dendriteAccumulate("OLQDR")
+                        dendriteAccumulate("OLQVR")
+                        dendriteAccumulate("OLQVL")
+                        runconnectome()
+                else:
+                        if tfood < 2:
+                                print "FOOD"
+                                dendriteAccumulate("ADFL")
+                                dendriteAccumulate("ADFR")
+                                dendriteAccumulate("ASGR")
+                                dendriteAccumulate("ASGL")
+                                dendriteAccumulate("ASIL")
+                                dendriteAccumulate("ASIR")
+                                dendriteAccumulate("ASJR")
+                                dendriteAccumulate("ASJL")
+                                runconnectome()
+                                time.sleep(0.5)
+                        tfood += 0.5
+                        if (tfood > 20):
+                                tfood = 0
+
+except KeyboardInterrupt:
+        if not disembodied:
+                stop()
+
+        print "Ctrl+C detected. Program Stopped!"
+        for pscheck in postSynaptic:
+                print (pscheck,' ',postSynaptic[pscheck][0],' ',postSynaptic[pscheck][1])
