@@ -13,11 +13,11 @@ The tiny worm Caenorhabditis elegans has only 302 neurons but exhibits some comp
 
 I created the connectome of the worm in a Python 2.7 program utilizing the GoPiGo commands for sensory input and motor output. The program essentially does the following:
 
-If no other sensory input is happening, stimulate food sensing neurons
-If an object is within 25cm of the sonar sensor, stimulate nose touch sensory neurons
-Each stimulation of sensory neurons, runs the connectome whereby each sensory neuron has added weights within a dictionary of the entire worms neural structure (i.e. dendriteAccumulate function). After each sensory neuron is activated and weights added, the programs run through all the neurons (i.e. runnconnectome function) and anywhere the accumulated weights of a neuron is greater than a predefined threshold, the neuron fires (i.e. fireNeuron function) and additional weights are added throughout the connectome which include neurons and muscles. 
-Each time the Connectome is ran, muscles, which are part of the same dictionary as the neurons, are accumulated as Right and Left muscle weights (weights for muscles can be negative as well as positive) and the wheels on the robot are activated according to the weighted values. 
-Each time a neuron or muscle is activated, the weights are set to zero so that accumulation can start again. 
+ * If no other sensory input is happening, stimulate food sensing neurons
+ * If an object is within 25cm of the sonar sensor, stimulate nose touch sensory neurons
+ * Each stimulation of sensory neurons, runs the connectome whereby each sensory neuron has added weights within a dictionary of the entire worms neural structure (i.e. dendriteAccumulate function). After each sensory neuron is activated and weights added, the programs run through all the neurons (i.e. runnconnectome function) and anywhere the accumulated weights of a neuron is greater than a predefined threshold, the neuron fires (i.e. fireNeuron function) and additional weights are added throughout the connectome which include neurons and muscles. 
+ * Each time the Connectome is ran, muscles, which are part of the same dictionary as the neurons, are accumulated as Right and Left muscle weights (weights for muscles can be negative as well as positive) and the wheels on the robot are activated according to the weighted values. 
+ * Each time a neuron or muscle is activated, the weights are set to zero so that accumulation can start again. 
 
 ### Worm’s Brain Controls the GoPiGo Robot
 
