@@ -1,5 +1,6 @@
 # GoPiGo Connectome
 # Written by Timothy Busbice, Gabriel Garrett, Geoffrey Churchill (c) 2014, in Python 2.7
+# Modified by John Cole in 2019 to work with Python 3.x and the GoPiGo3
 # The GoPiGo Connectome uses a postSynaptic dictionary based on the C Elegans Connectome Model
 # This application can be ran on the Raspberry Pi GoPiGo robot with a Sonar that represents Nose Touch when activated
 # To run standalone without a GoPiGo robot, simply comment out the sections with Start and End comments 
@@ -21,10 +22,13 @@ parser.add_argument('-v', '--verbose', action='count', default=0)
 disembodied = parser.parse_args().disembodied
 verbosity = parser.parse_args().verbose
 
-print "Running on Robot: " + str(not disembodied)
+print("Running on Robot: " + str(not disembodied))
 
 if not disembodied:
-        from gopigo import fwd, bwd, left_rot, right_rot, stop, set_speed, us_dist, volt
+        # from gopigo import , bwd, left_rot, right_rot, stop, set_speed, us_dist, volt
+        from easygopigo3 import EasyGoPiGo3 # importing the EasyGoPiGo3 class
+        gpg = EasyGoPiGo3() # instantiating a EasyGoPiGo3 object
+        my_distance_sensor = gpg.init_distance_sensor()
 
 import time
 import copy
@@ -39,6 +43,9 @@ global thisState
 global nextState
 thisState = 0 
 nextState = 1
+
+dist=0
+tfood = 0
 
 # The Threshold is the maximum sccumulated value that must be exceeded before
 # the Neurite will fire
@@ -4827,48 +4834,48 @@ def motorcontrol():
 
         # We turn the wheels according to the motor weight accumulation
         new_speed = abs(accumleft) + abs(accumright)
-        if new_speed > 150:
-                new_speed = 150
+        if new_speed > 300:
+                new_speed = 300
         elif new_speed < 75:
                 new_speed = 75
         if verbosity > 1:
-                print "Left: ", accumleft, "Right:", accumright, "Speed: ", new_speed
+                print("Left: ", accumleft, "Right:", accumright, "Speed: ", new_speed)
         
         if not disembodied:
-                set_speed(new_speed)
+                gpg.set_speed(new_speed)
                 if accumleft == 0 and accumright == 0:
-                        stop()
+                        gpg.stop()
                 elif accumright <= 0 and accumleft < 0:
-                        set_speed(150)
+                        gpg.set_speed(300)
                         turnratio = float(accumright) / float(accumleft)
                         # print "Turn Ratio: ", turnratio
                         if turnratio <= 0.6:
-                                 left_rot()
+                                 gpg.left() # left_rot()
                                  time.sleep(0.8)
                         elif turnratio >= 2:
-                                 right_rot()
+                                 gpg.right() # right_rot()
                                  time.sleep(0.8)
-                        bwd()
+                        gpg.backward()
                         time.sleep(0.5)
                 elif accumright <= 0 and accumleft >= 0:
-                        right_rot()
+                        gpg.right() # right_rot()
                         time.sleep(.8)
                 elif accumright >= 0 and accumleft <= 0:
-                        left_rot()
+                        gpg.left()  # left_rot()
                         time.sleep(.8)
                 elif accumright >= 0 and accumleft > 0:
                         turnratio = float(accumright) / float(accumleft)
                         # print "Turn Ratio: ", turnratio
                         if turnratio <= 0.6:
-                                 left_rot()
+                                 gpg.left()     # left_rot()
                                  time.sleep(0.8)
                         elif turnratio >= 2:
-                                 right_rot()
+                                 gpg.right()    # right_rot()
                                  time.sleep(0.8)
-                        fwd()
+                        gpg.forward() # fwd()
                         time.sleep(0.5)
                 else:
-                        stop()
+                        gpg.stop() # stop()
 
         accumleft = 0
         accumright = 0
@@ -4918,23 +4925,29 @@ def runconnectome():
 # Create the dictionary      
 createpostSynaptic()
 
-dist=0
-
 if not disembodied:
-        set_speed(120)
-        print "Voltage: ", volt()
+        gpg.set_speed(250)
+        print("Voltage: ", gpg.volt())
 
-tfood = 0
+
 
 def main():
         """Here is where you would put in a method to stimulate the neurons
         We stimulate chemosensory neurons constantly unless nose touch
         (sonar) is stimulated and then we fire nose touch neurites.
         """
-
+        
+        tfood = 0
+                
         while True:
+                # print("GOING!")
+        
                 if not disembodied:
-                        dist = us_dist(15)
+                        # dist = us_dist(15)
+                        print("Distance Sensor Reading: {} mm ".format(my_distance_sensor.read_mm()))
+                        dist = my_distance_sensor.read_mm()
+                      
+
                 else:
                         # use a fixed value if you want to stimulte nose touch
                         # use something like "dist = 27" if you want to stop nose stimulation
@@ -4942,9 +4955,10 @@ def main():
 
                 # Do we need to switch states at the end of each loop? No, this is done inside the runconnectome()
                 # function, called inside each loop.
-                if dist>0 and dist<30:
+                if dist>0 and dist < 100:
+                        # if dist < 50:
                         if verbosity > 0:
-                                print "OBSTACLE (Nose Touch)", dist 
+                                print("OBSTACLE (Nose Touch)", dist)
                         dendriteAccumulate("FLPR")
                         dendriteAccumulate("FLPL")
                         dendriteAccumulate("ASHL")
@@ -4959,7 +4973,7 @@ def main():
                 else:
                         if tfood < 2:
                                 if verbosity > 0:
-                                        print "FOOD"
+                                        print("FOOD")
                                 dendriteAccumulate("ADFL")
                                 dendriteAccumulate("ADFR")
                                 dendriteAccumulate("ASGR")
@@ -4978,9 +4992,9 @@ def keyboard_interrupt_handler(a, b):
         """Use CNTRL-C to stop the program."""
 
         if not disembodied:
-                stop()
+                gpg.stop()
 
-        print "Ctrl+C detected. Program Stopped!"
+        print("Ctrl+C detected. Program Stopped!")
         for pscheck in postSynaptic:
                 print (pscheck,' ',postSynaptic[pscheck][0],' ',postSynaptic[pscheck][1])
 
@@ -4989,4 +5003,3 @@ def keyboard_interrupt_handler(a, b):
 if __name__ == '__main__':
         signal.signal(signal.SIGINT, keyboard_interrupt_handler)
         main()
-
