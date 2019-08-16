@@ -1,10 +1,14 @@
 # GoPiGo Connectome
 # Written by Timothy Busbice, Gabriel Garrett, Geoffrey Churchill (c) 2014, in Python 2.7
+# Modified by John Cole in 2019 to work with Python 3.x and the GoPiGo3
 # The GoPiGo Connectome uses a Postsynaptic dictionary based on the C Elegans Connectome Model
 # This application can be ran on the Raspberry Pi GoPiGo robot with a Sonar that represents Nose Touch when activated
 # To run standalone without a GoPiGo robot, simply comment out the sections with Start and End comments 
 ## Start Comment
-from gopigo import *
+from easygopigo3 import EasyGoPiGo3 # importing the EasyGoPiGo3 class
+gpg = EasyGoPiGo3() # instantiating a EasyGoPiGo3 object
+gpg.reset_all()   # Unconfigure the sensors, disable the motors, and restore the LED to the control of the GoPiGo3 firmware.
+my_distance_sensor = gpg.init_distance_sensor()
 ## End Comment
 import time
 
@@ -4801,42 +4805,42 @@ def motorcontrol():
                 new_speed = 150
         elif new_speed < 75:
                 new_speed = 75
-        print "Left: ", accumleft, "Right:", accumright, "Speed: ", new_speed
+        print("Left: ", accumleft, "Right:", accumright, "Speed: ", new_speed)
         ## Start Commented section
-        set_speed(new_speed)
+        gpg.set_speed(new_speed)
         if accumleft == 0 and accumright == 0:
-                stop()
+                gpg.stop()
         elif accumright <= 0 and accumleft < 0:
-                set_speed(150)
+                gpg.set_speed(150)
                 turnratio = float(accumright) / float(accumleft)
                 # print "Turn Ratio: ", turnratio
                 if turnratio <= 0.6:
-                         left_rot()
+                         gpg.left()
                          time.sleep(0.8)
                 elif turnratio >= 2:
-                         right_rot()
+                         gpg.right()
                          time.sleep(0.8)
-                bwd()
+                gpg.backward()
                 time.sleep(0.5)
         elif accumright <= 0 and accumleft >= 0:
-                right_rot()
+                gpg.right()
                 time.sleep(.8)
         elif accumright >= 0 and accumleft <= 0:
-                left_rot()
+                gpg.left()
                 time.sleep(.8)
         elif accumright >= 0 and accumleft > 0:
                 turnratio = float(accumright) / float(accumleft)
                 # print "Turn Ratio: ", turnratio
                 if turnratio <= 0.6:
-                         left_rot()
+                         gpg.left()
                          time.sleep(0.8)
                 elif turnratio >= 2:
-                         right_rot()
+                         gpg.right()
                          time.sleep(0.8)
-                fwd()
+                gpg.forward()
                 time.sleep(0.5)
         else:
-                stop()
+                gpg.stop()
          ## End Commented section
         accumleft = 0
         accumright = 0
@@ -4872,8 +4876,8 @@ def runconnectome():
 # Create the dictionary      
 createpostsynaptic()
 dist=0
-set_speed(120)
-print "Voltage: ", volt()
+gpg.set_speed(120)
+print("Voltage: ", gpg.volt())
 tfood = 0
 try:
 ### Here is where you would put in a method to stimulate the neurons ###
@@ -4883,13 +4887,13 @@ try:
     while True:
         ## Start comment - use a fixed value if you want to stimulte nose touch
         ## use something like "dist = 27" if you want to stop nose stimulation
-        dist = us_dist(15)
+        dist = my_distance_sensor.read_mm()
         ## End Comment
 
         #Do we need to switch states at the end of each loop? No, this is done inside the runconnectome()
         #function, called inside each loop.
-        if dist>0 and dist<30:
-            print "OBSTACLE (Nose Touch)", dist 
+        if dist>0 and dist<100:
+            print("OBSTACLE (Nose Touch)", dist)
             dendriteAccumulate("FLPR")
             dendriteAccumulate("FLPL")
             dendriteAccumulate("ASHL")
@@ -4903,8 +4907,8 @@ try:
             runconnectome()
         else:
             if tfood < 2:
-                    print "FOOD"
-                    print (thisState)
+                    print("FOOD")
+                    print(thisState)
                     dendriteAccumulate("ADFL")
                     dendriteAccumulate("ADFR")
                     dendriteAccumulate("ASGR")
@@ -4925,6 +4929,6 @@ except KeyboardInterrupt:
     ## Start Comment
     stop()
     ## End Comment
-    print "Ctrl+C detected. Program Stopped!"
+    print("Ctrl+C detected. Program Stopped!")
     for pscheck in postsynaptic:
-        print (pscheck,' ',postsynaptic[pscheck][0],' ',postsynaptic[pscheck][1])
+        print(pscheck,' ',postsynaptic[pscheck][0],' ',postsynaptic[pscheck][1])
