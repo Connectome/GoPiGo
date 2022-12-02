@@ -2,6 +2,14 @@
 
 The GoPiGoConnectomev(n).py Python program provided here can be used with a Raspberry Pi GoPiGo robotic kit created by Dexter Industries.
 
+This code was modeled off the roundworm brain mapping. A video of the robot in motion can be seen here:
+
+https://www.youtube.com/watch?v=9T_25APWwic&t=72s
+
+The original inspiration for this which uses a packet messaging system instead of time-series python can be viewed here:
+
+https://www.youtube.com/watch?v=2_i1NKPzbjM
+
 To run this code, from the Pi directory, type 
 ```
 sudo python connectome.py
